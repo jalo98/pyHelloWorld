@@ -1,0 +1,116 @@
+Notes for 13 requirements:
+Intex load data: what are they?
+Where 13.4 (Firestar) and 13.5(Lender List and Confidentiality Agreement data from Firestar) is done?
+Oracle CLO db (13.6)
+CLO Asset Mapping Service (13.7)
+CLO Deal Update Service (13.8)
+Intex Update Notification Service (13.9) / Deal Force-Update & Presettle load tool (13.9)
+Loan Price Service (13.10?): is missing the "allows the user to define and choose waterfalls..." part
+Where is (13.11)?
+BondStudio RWA Calculator (13.12)
+CLO Intex Data Retrieval Service (13.13?): it's not clear if this is the feed with the CLO asset to issuers that CIO consumes.
+
+Notes for 14 "Project Services to be Pre..."
+CLO: Collateralized Loan Obligation
+
+Loan RefData Service (14.2.5)
+(14.2.6)?
+CLO Asset Mapping Service (14.3.2)
+Intex Update Notification Service (14.3.4)
+CLO Asset Price Service (14.3.5?)
+BondStudio RWA Calculator (14.3.7)
+
+
+Algoritmo de matching:
+-Cuando se procesa para encontrar matching?
+Si viene una actualización de un registro, con qué criterio se actualiza?
+Tornado
+Glimpse
+go/athena
+go/Glimpse
+
+
+Notas call 10/12:
+tienen um proceso para limpiar dup. actualmenete
+merge sería nuevo
+no se puede rompere la data actualiza
+posible uso de otras tec. ( no tiene preferencias si usan otro entorn. o tech, distino a athena)
+firestar se saca del star date. si no se calcula de...
+7: 
+8: available. no lo tenemos que hacer ahora, pero no lo tiene ahora
+9: lo están haciendo ahroa. svc up. noso. add more metrics. hay una interf. athena based svc
+10: nuevo. sql dabase cache. tiene que estar actualizado
+no actualiza ninguno otro.
+11: cada asset. da la companía coid. da data, hay que enrich -. De hydra se saca bigdata
+12: intra day y eod, resulta en waterfall
+
+otros
+- proponer disñ. ellos revisan.
+- mult. componentes perform UAT.
+- cuanto dura UAT: 2 day / 2 w. depen. 2w (cuando se reemplaza lago para check que siga andando igual)
+- tech. athena. 
+- markit is not scope
+- hydra-> athena db. (dt?)
+- clo oracle? yes
+- hydra db - oracle db (loans relacion bw h and o)
+loan CLO, bonds -> loan hydra ()
+using the asset mapping
+matcheing svc CLO and hydra. sino creea uno nuevo.
+- calc: convert loan into equities: 
+
+algo tiene qu ser flexi para agre nuevas reglas o features
+UI para config? no, se hace del BE
+
+
+loan: si se necesitan nuevos campos se pueden pedir
+
+deliverables: data certification: 
+
+cognisant
+
+Creates a feed of mapping from CLO asset to JPMC Issuing Entity IDs that CIO consumes.
+
+-Loan Edit & Match
+-Bond Edit & Match
+-Equities-like Edit & Match
+-Loan Price Service
+-CLO Loan Mapping
+-CLO Bond Mapping
+-CLO Equities-like Mapping
+-CLO Asset to JPMC entity feed
+-CLO EOD to ShareDrive Feed
+-CLO Issuer Mapping UI
+-CLO Update SVC
+-Orchestrator
+-BondStudio Connector
+-Intex poller (Notification)
+-CLO Intex Connector
+
+QR will build a Price Suggestion service that given a CLO tranche (a) identifies similar CLO tranches (b) that have recent color stored and suggests a price or price range for (a) and reason for that price.
+
+From QR it identifies similar CLO tranches that have recent color stored and suggests a price or price range for CLO tranche and reason for that price.
+It takes real-time feed of Color information from TradeInsight (the internal Color Tracking system) to QR’s suggestion engine.
+
+Revisar:
+Loan RefData (External) (Slide 16)
+
+elegir los mejores cuatro/seis componenentes
+revisar los flujos
+
+Assets Mapping & Editing
+CLO Asset Mapping
+Orchestrator
+Loan Trade and Position Data Service
+Loan Pricing
+Loan Pricing
+Responsibilities: It consolidates multiple price sources, retrieving latest and historical prices for assets CLO, allowing the user to define and use "Waterfall" for them.  
+The service and its component domains should facilitate both real-time and historical query. The service should allow retrieval of prices using any Loan or Bond ID.  It should also support ability to retrieve the prices for all instruments at once
+Modules:
+
+Interactions: It retrieves list of prices from external sources. These sources are Reuter prices, Intraday Markit, Intex price, EOD Markit price, Firestar EOD, Firestar Intraday and Platform options. It also enrols service to DataDomain
+Consume price waterfall order from db
+Enrol service to Datadomain
+Implement waterfall logic algorithm
+Interactions: 
+Reuter prices, Intraday Markit, Intex price, EOD Markit price, Firestar EOD, Firestar Intraday, Platform options
+
