@@ -15,12 +15,13 @@ def parseArticle(outer_page):
 
     # time.sleep(5)
 
-    # inner_page = getArticle(post_source)
+    inner_page = getArticle(post_source)
 
-    return post_source
+    return inner_page
 
 
 def get_page_source_from_url(url):
+    print("Getting a Driver")
     options = webdriver.ChromeOptions()
     options.add_argument("--ignore-certificate-errors")
     options.add_argument("--incognito")
@@ -104,51 +105,18 @@ def writeToJson(pages, depth, mode='w'):
 
 
 def processSourceArticles(outer_pages_aux):
-    post_source_aux = []
+    inner_pages_aux = []
     with ProcessPoolExecutor(max_workers=10) as executor:
-        start_post_articles = time.time()
+        start_inner_articles = time.time()
         futures = [executor.submit(parseArticle, outer_page) for outer_page in outer_pages_aux]
         for post_source_post in as_completed(futures):
             if post_source_post.exception() is not None:
                 print("There has been an Exception:", post_source_post.exception())
             else:
-                post_source_aux.append(post_source_post.result())
-        end_post_articles = time.time()
-        print("Time Taken SourceArticles: {:.6f}s".format(end_post_articles-start_post_articles))
-    return post_source_aux
-
-
-def processInnerArticles(post_sources_aux):
-    inner_page_aux = []
-    with ProcessPoolExecutor(max_workers=10) as executor:
-        start_inner_articles = time.time()
-        futures = [executor.submit(getArticle, post_source) for post_source in post_sources_aux]
-        for post_inner_page in as_completed(futures):
-            if post_inner_page.exception() is not None:
-                print("There has been an Exception:", post_inner_page.exception())
-            else:
-                inner_page_aux.append(post_inner_page.result())
+                inner_pages_aux.append(post_source_post.result())
         end_inner_articles = time.time()
-        print("Time Taken InnerArticles: {:.6f}s".format(end_inner_articles-start_inner_articles))
-    return inner_page_aux
-
-def parse_and_get_articles(outer_pages_aux):
-    return getArticle(parseArticle(outer_pages_aux))
-
-
-def processSourcesInnerArticles(outer_pages_aux):
-    inner_page_aux = []
-    with ProcessPoolExecutor(max_workers=10) as executor:
-        start_source_inner_articles = time.time()
-        futures = [executor.submit(parse_and_get_articles, outer_page) for outer_page in outer_pages_aux]
-        for post_inner_page in as_completed(futures):
-            if post_inner_page.exception() is not None:
-                print("There has been an Exception:", post_inner_page.exception())
-            else:
-                inner_page_aux.append(post_inner_page.result())
-        end_source_inner_articles = time.time()
-        print("Time Taken SourceInnerArticles: {:.6f}s".format(end_source_inner_articles - start_source_inner_articles))
-    return inner_page_aux
+        print("Time Taken: {:.6f}s".format(end_inner_articles-start_inner_articles))
+    return inner_pages_aux
 
 
 if __name__ == "__main__":
@@ -160,11 +128,7 @@ if __name__ == "__main__":
 
         outer_pages = getArticles(source_page_xml)
 
-        # post_sources = processSourceArticles(outer_pages)
-        #
-        # inner_pages = processInnerArticles(post_sources)
-
-        inner_pages = processSourcesInnerArticles(outer_pages)
+        inner_pages = processSourceArticles(outer_pages)
 
         writeToCSV(outer_pages, "outer", ["title", "link"], "w")
         writeToCSV(inner_pages, "inner", ["title", "link", "img", "video", "text", "blockquote"], "w")
