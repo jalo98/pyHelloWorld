@@ -151,7 +151,7 @@ def processSourcesInnerArticles(outer_pages_aux):
     return inner_page_aux
 
 
-if __name__ == "__main__":
+def main():
     try:
         start_general = time.time()
         print("Starting the application!!!!")
@@ -179,3 +179,7 @@ if __name__ == "__main__":
         print("There has been an error!!:", ex)
         print("Exception instance:", type(ex))
         print("Exception args:", type(ex.args))
+
+
+if __name__ == "__main__":
+    main()
